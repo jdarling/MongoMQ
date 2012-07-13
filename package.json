@@ -3,7 +3,7 @@
     "name": "Jeremy Darling",
     "email": "jeremy.darling@gmail.com"
   },
-  "name": "MongoMQ",
+  "name": "mongomq",
   "version": "0.1.0",
   "repository": {
     "type": "git",
@@ -20,5 +20,5 @@
   },
   "dependencies": {
     "mongodb": ">= 1.0.2"
-  },
+  }
 }
