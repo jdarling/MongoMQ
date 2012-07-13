@@ -50,6 +50,13 @@ passive
 callback(err, messageContents, next)
   * Use next() to look for another message in the queue, don't call next() if you only want a one time listener
 
+MongoMQ.onAny(callback);
+------------------------
+NOTE: Passive by default and only reacts to events after handler is registered
+
+callback(err, messageContents, next)
+  * Use next() to look for another message in the queue, don't call next() if you only want a one time listener
+
 MongoMQ.emit(msgType, messageContents);
 ---------------------------------------
 msgType
