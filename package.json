@@ -4,7 +4,7 @@
     "email": "jeremy.darling@gmail.com"
   },
   "name": "mongomq",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/jdarling/MongoMQ.git"
@@ -13,7 +13,7 @@
   ],
   "main": "./lib/MongoMQ",
   "bin": {
-    "MongoMQ": "./bin/test.js"
+    "MongoMQ": "./bin/MongoMQ.js"
   },
   "engines": {
     "node": ">= v0.6.0"
