@@ -10,7 +10,7 @@ From GitHub
 
 Using NPM
 ---------
-  * npm install MongoMQ
+  * npm install mongomq
     
 What is MongoMQ?
 ================
