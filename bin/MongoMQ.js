@@ -23,13 +23,14 @@ var r = repl.start({
     });
 
 r.on('exit', function(){
-  queue.close();
+  queue.stop(); // force a close
 });
 
-var funcName, value;
+var funcName, value, funcs = [];
 for(funcName in queue){
   value = queue[funcName];
   if(typeof(value)=='function'){
+    funcs.push(funcName);
     r.context[funcName] = (function(f){
       return function(){
         f.apply(queue, arguments);
@@ -43,6 +44,26 @@ r.context.logAny = function(){
     console.log(data);
     next();
   });
+};
+
+r.context.help = function(){
+  msg = 'Built in test methods:\r\n'+
+      '  help() - shows this message\r\n'+
+      '  logAny() - logs any message to the console\r\n'+
+      '  listeners() - Alias of the queue.listeners property surfaced as a method\r\n';
+  var l = funcs.length;
+  for(var i = 0; i<l; i++){
+    msg += '  '+funcs[i]+'() - Alias of the queue.'+funcs[i]+' method\r\n';
+  }
+  msg += '\r\nInstance Data\r\n'+
+      '  queue - the global MongoMQ instance\r\n'
+      ;
+  console.log(msg);
+  return '';
+};
+
+r.context.listeners = function(){
+  return queue.listeners;
 };
 
 r.context.queue = queue;
