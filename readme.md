@@ -1,7 +1,7 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
-Version 0.2.1 presents what will hopefully be the final API, but is not feature complete yet.  Hopefully version 0.2.2 will be feature complete.
+Version 0.2.2 presents what will hopefully be the final API, but is not feature complete yet.  Hopefully version 0.2.2 will be feature complete.
 
 Installation
 ============
@@ -69,13 +69,11 @@ MongoMQ.emit(msgType, data, [partialCallback], [completeCallback])
 
 Places the a message of msgTye on the queue with the provided data for handlers to consume.
 
-NOTE: partialCallback and completeCallback are not yet implemented, they are here as a prototype of how this functionality may be implemented.
-
 Params:
 * msgType - The message type to emit.
 * data - a JSON serializeable collection of data to be sent.
-* partialCallback - NOT IMPLEMENTED - Will be called for large or long running result sets to return partial data back.  Optional and if not present then completeCallback will be called with buffered results once all operations have completed.
-* completeCallback - NOT IMPLEMENTED - Will be called once all remote processing has been completed.  If partialCallback is not provided and completeCallback is provided a temporary buffer will be setup and the final result set will be sent to completeCallback.
+* partialCallback - Will be called for large or long running result sets to return partial data back.  Optional and if not present then completeCallback will be called with buffered results once all operations have completed.
+* completeCallback - Will be called once all remote processing has been completed.  If partialCallback is not provided and completeCallback is provided a temporary buffer will be setup and the final result set will be sent to completeCallback.
 
 MongoMQ.on(msgType, [passive||options], handler)
 ---------------------------------------
@@ -86,7 +84,8 @@ Params:
 * msgType - The message type to listen for
 * passive - If true will not mark the message as handled when a message is consumed from the queue
 * options - additional options that can be passed
-* callback(err, messageContents, next) - Use next() to look for another message in the queue, don't call next() if you only want a one time listener
+* handler(err, messageContents, next) - Use next() to look for another message in the queue, don't call next() if you only want a one time listener
+    * If you want to send back data or partial data use next(data, complete) where complete should be true if you have sent all of your responses, see test.js r.context.tmp for a simple example.
 
 options -
   * passive - If true will not mark the message as handled when a message is consumed from the queue
@@ -246,6 +245,10 @@ Planned Improvements
 
 Update History
 ==============
+
+v0.2.2
+  * Completed code to allow for callbacks and partial callbacks to be issued back to emit statements
+  * Complteed refactoring of code to properly seperate functionality into objects
 
 v0.2.1
   * Majorly refactored code

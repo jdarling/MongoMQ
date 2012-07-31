@@ -41,7 +41,7 @@ for(funcName in queue){
 
 r.context.logAny = function(){
   queue.onAny(function(err, data, next){
-    console.log(data);
+    console.log(err, data);
     next();
   });
 };
