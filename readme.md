@@ -1,7 +1,7 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
-Version 0.2.2 presents what will hopefully be the final API, but is not feature complete yet.  Hopefully version 0.2.2 will be feature complete.
+Version 0.2.2 presents what should be the final API and should be feature complete, need to add a lot more test cases, documentation, samples, and etc to the project now.
 
 Installation
 ============
