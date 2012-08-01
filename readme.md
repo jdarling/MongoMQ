@@ -1,7 +1,8 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
-Version 0.2.2 presents what should be the final API and should be feature complete, need to add a lot more test cases, documentation, samples, and etc to the project now.
+Version 0.2.3 fixed a minor bug in passive listeners.
+Version 0.2.2 presented what should be the final API and should be feature complete, need to add a lot more test cases, documentation, samples, and etc to the project now.
 
 Installation
 ============
@@ -81,7 +82,7 @@ MongoMQ.on(msgType, [passive||options], handler)
 Sets up a listener for a specific message type.
 
 Params:
-* msgType - The message type to listen for
+* msgType - The message type to listen for can be a string or a regular expression
 * passive - If true will not mark the message as handled when a message is consumed from the queue
 * options - additional options that can be passed
 * handler(err, messageContents, next) - Use next() to look for another message in the queue, don't call next() if you only want a one time listener
@@ -238,13 +239,31 @@ r.context.queue = queue;
 
 r.context.help();
 ```
-Planned Improvements
-====================
 
-  * Update the emit method and handler callbacks to allow placing an event on to the queue collection and receiving a response or responses from it.
+How Events are stored
+=====================
+
+```javascript
+{
+  _id: ObjectId(), // for internal use only
+  event: 'event name', // string that represents what type of event this is
+  data: JSON Data, // Contains the actual message contents
+  handled: boolean, // states if the message has been handled or not
+  emitted: Date(), // Contains the date/time when the event was emitted
+  partial: boolean, // for responses states if this is a partial response or the complete/end response
+  host: string, // Contains the host name of the machine that initiated the event
+  conversationId: string // if the event expects response(s) this will be the conversation identifier used to track those responses
+}
+```
 
 Update History
 ==============
+
+v0.2.3
+  * Minor bug fix related to passive listeners where a fromDT was not passed in the options
+  * Added hostName to messages for better tracking/logging
+  * Modified passive callback to pass the actual message as the "this" argument, you can now use this.event to get the actual event that was responded to
+  * Updated the on() method to accept strings or regular expressions to filter events on
 
 v0.2.2
   * Completed code to allow for callbacks and partial callbacks to be issued back to emit statements
