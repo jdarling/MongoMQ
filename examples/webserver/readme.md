@@ -10,6 +10,9 @@ Installation
 
 Make sure you run npm install in the webserver root folder to install the dependencies required to run Steven's code.
 
+In a command window run the examples/webserver/services/dao.js file:
+  node dao
+
 You can open the application stack in WebMatrix and run it, or you can simply run:
   node server
   
