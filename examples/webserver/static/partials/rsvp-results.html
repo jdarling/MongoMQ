@@ -1,0 +1,24 @@
+<h1 class="results-title">Results</h1>
+
+<p>Votes so far: <b data-bind="text: votesTableData().length"></b></p>
+
+<div class="results" data-bind="visible: votesTableData().length">
+    <table>
+        <thead><tr>
+            <th>Name</th>
+            <!-- ko foreach: invitation().choices -->
+                <th data-bind="text: displayText"><div></div></th>
+            <!-- /ko -->
+        </tr></thead>
+        <tbody data-bind="foreach: votesTableData">
+            <tr>
+                <td data-bind="text: name"><div></div></td>
+                <!-- ko foreach: choices -->
+                    <td data-bind="css: { chosen: isChosen }">
+                        <!-- ko if: isChosen -->✓<!-- /ko -->
+                    </td>
+                <!-- /ko -->
+            </tr>
+        </tbody>
+    </table>
+</div>

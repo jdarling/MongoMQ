@@ -1,0 +1,12 @@
+<div data-bind="ifnot: id">
+    <%- partial('partials/invitation-creating') %>
+</div>
+
+<div data-bind="if: id">
+    <%- partial('partials/invitation-done') %>
+</div>
+
+<script>
+    ko.applyBindings(new invitationViewModel());
+    $("textarea").focus();
+</script>

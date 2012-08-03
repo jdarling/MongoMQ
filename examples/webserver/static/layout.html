@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html lang="en" manifest="/cache.manifest">
+    <head>
+        <meta charset="utf-8" />
+        <title>Invitify</title>
+        <script src="/script/jquery-1.7.2.min.js"></script>
+        <script src="/script/jquery.validate.min.js"></script>
+        <script src="/script/knockout-2.1.0.js"></script>
+        <script src="/script/util.js"></script>
+        <script src="/script/viewmodels/invitationViewModel.js"></script>
+        <script src="/script/viewmodels/rsvpViewModel.js"></script>
+        <script src="/api/socket.io/socket.io.js"></script>
+        
+        <link rel="stylesheet" href="/styles/app.css" />
+        
+        <!-- Make mobile browsers use a mobile-sized layout -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        
+        <!-- iOS-specific metadata for standalone (homescreen) use -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link rel="apple-touch-icon-precomposed" href="/images/app-icon-114-114.jpg"/>
+        <link rel="apple-touch-startup-image" href="/images/splash-320-460.jpg" />
+        <link rel="apple-touch-startup-image" href="/images/splash-748-1024.jpg" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)" />
+        <link rel="apple-touch-startup-image" href="/images/splash-768-1004.jpg" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)" />
+    </head>
+    <body>
+        <h1 class="site-title">
+            <a href="/">Invitify <span class="version">(alpha)</span></a>
+        </h1>
+        <div class="main-container">
+            <%- body %>
+        </div>
+    </body>
+</html>

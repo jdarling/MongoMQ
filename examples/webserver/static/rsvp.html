@@ -1,0 +1,31 @@
+<div data-bind="ifnot: invitation">
+    <em>Loading...</em>
+</div>
+<div data-bind="if: invitation">
+    <p>You've been invited to:</p>
+    <h1 data-bind="text: invitation().title"></h1>
+    
+    <!-- ko ifnot: hasSubmitted -->
+        <%- partial('partials/rsvp-creating') %>
+    <!-- /ko -->
+    <!-- ko if: hasSubmitted -->
+        <p data-bind="visible: hasSubmitted"><em>Thanks for replying!</em></p>
+    <!-- /ko -->
+    
+    <%- partial('partials/rsvp-results') %>
+</div>
+
+<script>
+    (function() {
+        var id = location.hash.substring(1),
+            viewModel = new rsvpViewModel(id);
+        ko.applyBindings(viewModel);
+
+        // Connect to the socket.io endpoint, and update viewmodel on notification
+        setTimeout(function () {
+            var socket = io.connect(null, { resource: 'api/socket.io' });
+            socket.on('connect', function () { socket.emit('registerInterest', id); });
+            socket.on('invitationUpdate', viewModel.invitation);
+        });
+    })();
+</script>

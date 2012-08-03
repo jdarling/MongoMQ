@@ -1,0 +1,20 @@
+<form data-bind="validate: save">
+    <h1>Create an invitation</h1>
+    <textarea data-bind="value: title, uniqueName: true"
+              placeholder="Example: Let's go out for dinner at the new Thai place!"
+              class="required"></textarea>
+
+    <h2>Choices:</h2>
+    <ol class="choice-list" data-bind="foreach: choices">
+        <li>
+            <button type="button" data-bind="click: $parent.removeChoice">Remove</button>
+            <div><input data-bind="value: displayText, hasfocus: true, uniqueName: true"
+                        placeholder="Example: Wednesday" class="required" maxlength="15" /></div>
+        </li>
+    </ol>
+
+    <p data-bind="visible: !choices().length"><em>Add some choices!</em></p>
+
+    <button class="big dim" data-bind="click: addChoice">+ add choice</button>
+    <button class="big bright" type="submit">OK, all done!</button>
+</form>

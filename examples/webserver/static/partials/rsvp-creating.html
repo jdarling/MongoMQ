@@ -1,0 +1,22 @@
+<form class="response" data-bind="validate: submitRsvp">
+    <h1>Your reply</h1>
+    <div class="from">
+        <label>From:</label>
+        <span><input data-bind="value: respondeeName, uniqueName: true"
+                     placeholder="Your name" class="required" minlength="3" maxlength="20" /></span>
+    </div>
+    
+    <p>Thanks for the invitation! I'm happy with the following choices:</p>
+    
+    <div class="choices" data-bind="foreach: invitation().choices">
+        <p>
+            <label>
+                <input type="checkbox" data-bind="value: id, checked: $root.respondeeChoices" />
+                <span data-bind="text: displayText"></span>
+            </label>
+        </p>
+    </div>
+    <p>
+        <button class="big bright" type="submit">Send reply</button>
+    </p>
+</form>
