@@ -1,0 +1,361 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>MongoMQ</title>
+  <meta name="description" content="MongoMQ is a messaging queue built on top of Node.js and MongoDB's tailable cursors.">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">MongoMQ</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">MongoMQ is a messaging queue built on top of Node.js and MongoDB's tailable cursors.</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/jdarling/MongoMQ/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/jdarling/MongoMQ/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/jdarling/MongoMQ" class="code">View MongoMQ on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>MongoMQ - Node.js MongoMQ</h1>
+
+<p>Version 0.2.4 introduces two new demo applications (basic and webserver) to showcase how to utilize MongoMQ.  It made a minor change to the MongoMQ Constructor allowing for no options to be passed when working with a local MongoDB instance and not needing to specify a Database or Collection to utilize.</p>
+
+<p>The webserver example was built using <a href="http://www.microsoft.com/web/webmatrix/">WebMatrix 2.0</a> and is an example of a complete useable sample of how an application stack could be developed with MongoMQ.  The idea is to have a webserver where the processing can take place anywhere else on the network or any place where the MongoDB is available.  At the same time it could be ran in a load balanced solution where multiple copies of the stack are balanced and still share work.  It uses MongoDB as the data store since it must already be available to use MongoMQ.</p>
+
+<p>The code used for the webserver demo was modified from <a href="https://github.com/SteveSanderson/nodejs-webmatrix-video-tutorials">Steven Sandersons video tutorials</a></p>
+
+<h1>Installation</h1>
+
+<h2>From GitHub</h2>
+
+<ul>
+<li>Download from GitHub and extract.</li>
+<li>npm install mongodb</li>
+</ul><h2>Using NPM</h2>
+
+<ul>
+<li>npm install mongomq</li>
+</ul><h1>Requirements</h1>
+
+<ul>
+<li>Node.js - v0.8.2 or better (really only for the MongoMQ and Test.js scripts REPL support)</li>
+<li>MongoDB - v2.0.2 or better (for Tailable Cursors, autoIndexId bug fix, and ReplicaSet fixes)</li>
+</ul><h1>What is MongoMQ?</h1>
+
+<p>MongoMQ is a messaging queue built on top of Node.js and MongoDB's tailable cursors.  It allows for distributed of messages across workers in both a single reciever and broadcast method.</p>
+
+<h1>What MongoMQ is NOT</h1>
+
+<p>MongoMQ does NOT (currently) support callback's once a message is processed.  Instead it is recommended that you use a one time listener to pickup responses if this is required.</p>
+
+<h1>Supported Methods</h1>
+
+<h2>new MongoMQ(options)</h2>
+
+<p>options</p>
+
+<ul>
+<li>mqCollectionName - Collection to store queue messages in, defaults to 'queue'</li>
+<li>mqDB             - Database to store queue in, defaults to 'MongoMQ'</li>
+<li>username         - Optional value of the username to validate against Mongo with</li>
+<li>password         - Optional value of the password to validate against Mongo with</li>
+<li>server           - If not running against a ReplicaSet this is the server to connect to</li>
+<li>port             - If not running against a ReplicaSet this is the server port to connect with</li>
+<li>servers[]        - If connecting to a ReplicaSet then this is a collection of {host: 'hostname', port: 1234} objects defining the root entry for the ReplicaSet</li>
+<li>collectionSize   - The size in bytes to cap the collection at, defaults to 100000000</li>
+<li>serverOptions    - An optional options object that will be passed to Mongo-Native when the Mongo connection is created</li>
+<li>nativeParser     - Boolean (defaults false) to enable usage of Mongo-Native's native parser.  Only use this if you install mongodb with native support</li>
+<li>autoStart        - Boolean (defaults true) if the MongoMQ instance should start itself up when created, if set to false you need to call MongoMQ.start()</li>
+</ul><h2>MongoMQ.start([callback])</h2>
+
+<p>Starts the queue listener and sets up the emitter.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>callback - will be called once the queue is opened and all registered listeners are setup</li>
+</ul><h2>MongoMQ.stop([callback])</h2>
+
+<p>Stops listening for messages and closes the emitter.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>callback - will be called once the queue is completely close and all registered listeners have been shut down</li>
+</ul><h2>MongoMQ.emit(msgType, data, [partialCallback], [completeCallback])</h2>
+
+<p>Places the a message of msgTye on the queue with the provided data for handlers to consume.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>msgType - The message type to emit.</li>
+<li>data - a JSON serializeable collection of data to be sent.</li>
+<li>partialCallback - Will be called for large or long running result sets to return partial data back.  Optional and if not present then completeCallback will be called with buffered results once all operations have completed.</li>
+<li>completeCallback - Will be called once all remote processing has been completed.  If partialCallback is not provided and completeCallback is provided a temporary buffer will be setup and the final result set will be sent to completeCallback.</li>
+</ul><h2>MongoMQ.on(msgType, [passive||options], handler)</h2>
+
+<p>Sets up a listener for a specific message type.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>msgType - The message type to listen for can be a string or a regular expression</li>
+<li>passive - If true will not mark the message as handled when a message is consumed from the queue</li>
+<li>options - additional options that can be passed</li>
+<li>handler(err, messageContents, next) - Use next() to look for another message in the queue, don't call next() if you only want a one time listener
+
+<ul>
+<li>If you want to send back data or partial data use next(data, complete) where complete should be true if you have sent all of your responses, see test.js r.context.tmp for a simple example.</li>
+</ul>
+</li>
+</ul><p>options -</p>
+
+<ul>
+<li>passive - If true will not mark the message as handled when a message is consumed from the queue</li>
+<li>hereOnOut - Boolean (defaults false) will only recieve messages from the time the listener was registered instead of all unconsumed messages if set to true</li>
+</ul><h2>MongoMQ.onAny(handler)</h2>
+
+<p>Sets up a passive listener for all messages that are placed on the queue.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>callback(err, messageContents, next) - Use next() to look for another message in the queue, don't call next() if you only want a one time listener</li>
+</ul><h2>MongoMQ.indexOfListener([event], [handler])</h2>
+
+<p>Provides back the index of the first listener that matches the supplied event and/or handler.  One or both of event and handler must be supplied.  Returns BOOLEAN false if no handler is found.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>event - The name of the event to look for.</li>
+<li>handler - The specific handler function to look for.</li>
+</ul><h2>MongoMQ.getListenerFor([event], [handler])</h2>
+
+<p>Provides back the first listener that matches the supplied event and/or handler.  One or both of event and handler must be supplied.  Returns BOOLEAN false if no handler is found.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>event - The name of the event to look for.</li>
+<li>handler - The specific handler function to look for.</li>
+</ul><h2>MongoMQ.removeListener([event], [handler])</h2>
+
+<p>Shuts down the first listener that matches the supplied event and/or handler and removes it from the listeners list.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>event - The name of the event to look for.</li>
+<li>handler - The specific handler function to look for.</li>
+</ul><h2>MongoMQ.removeListeners(event)</h2>
+
+<p>Shuts down ALL listeners for the specified event and removes it from the listeners list.</p>
+
+<p>Params:</p>
+
+<ul>
+<li>event - The name of the event to look for.</li>
+</ul><h2>MongoMQ.removeAllListeners()</h2>
+
+<p>Shuts down ALL listeners and clears the listeners list.</p>
+
+<h1>How does MongoMQ work?</h1>
+
+<p>MongoMQ sets up a tailable collection and then starts listeners using find in conjunction with findAndModify to pickup messages out of this collection.</p>
+
+<p>Since MongoMQ is basically a wrapper around MongoDB's built in support for tailable cursors it is possible to place listeners built in other langauges on the "queue".</p>
+
+<h1>Sample Usage</h1>
+
+<ul>
+<li>Ensure MongoDB is up and running locally (or modify the config options to collect to your Mongo instance)</li>
+<li>Start 3 copies of the bin/test.js script.</li>
+<li>In two copies type listen() to setup a "test" message listener</li>
+<li>In the 3rd copy type load() to send 100 test messages to the queue</li>
+</ul><p>You should see the two listeners pickup messages one at a time with whoever has resources to process picking up the message first.</p>
+
+<h1>bin/test.js</h1>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">MongoMQ</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'../lib/MongoMQ'</span><span class="p">).</span><span class="nx">MongoMQ</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">repl</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'repl'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoMQ</span><span class="p">({</span>
+  <span class="nx">autoStart</span><span class="o">:</span> <span class="kc">false</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">repl</span><span class="p">.</span><span class="nx">start</span><span class="p">({</span>
+      <span class="nx">prompt</span><span class="o">:</span> <span class="s2">"testbed&gt;"</span>
+    <span class="p">});</span>
+<span class="nx">r</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'exit'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">queue</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">msgidx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">send</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">queue</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">'test'</span><span class="p">,</span> <span class="nx">msgidx</span><span class="p">);</span>
+  <span class="nx">msgidx</span><span class="o">++</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">load</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="nx">queue</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">'test'</span><span class="p">,</span> <span class="nx">msgidx</span><span class="p">);</span>
+    <span class="nx">msgidx</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">logMsg</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">next</span><span class="p">){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'LOG: '</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+      <span class="nx">next</span><span class="p">();</span>
+    <span class="p">};</span>
+<span class="kd">var</span> <span class="nx">eatTest</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">next</span><span class="p">){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'eat: '</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+      <span class="nx">next</span><span class="p">();</span>
+    <span class="p">};</span>
+
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">logAny</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">queue</span><span class="p">.</span><span class="nx">onAny</span><span class="p">(</span><span class="nx">logMsg</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">eatTest</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">queue</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'test'</span><span class="p">,</span> <span class="nx">eatTest</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">start</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">){</span>
+  <span class="nx">queue</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">cb</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">stop</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">queue</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">help</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Built in test methods:\r\n'</span><span class="o">+</span>
+      <span class="s1">'  help()    - shows this message\r\n'</span><span class="o">+</span>
+      <span class="s1">'  logAny()  - logs any message to the console\r\n'</span><span class="o">+</span>
+      <span class="s1">'  eatTest() - consumes next available "test" message from the queue\r\n'</span><span class="o">+</span>
+      <span class="s1">'  send()    - places a "test" message on the queue\r\n'</span><span class="o">+</span>
+      <span class="s1">'  load()    - places 100 "test" messages on the queue\r\n'</span><span class="o">+</span>
+      <span class="s1">'  start()   - start the queue listener\r\n'</span><span class="o">+</span>
+      <span class="s1">'  stop()    - stop the queue listener\r\n'</span><span class="o">+</span>
+      <span class="s1">'\r\nInstance Data\r\n'</span><span class="o">+</span>
+      <span class="s1">'  queue - the global MongoMQ instance\r\n'</span>
+      <span class="p">);</span>
+  <span class="k">return</span> <span class="s1">''</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/*</span>
+<span class="cm">queue.start(function(){</span>
+<span class="cm">  r.context.eatTest();</span>
+<span class="cm">});</span>
+<span class="cm">*/</span>
+
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">queue</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">;</span>
+
+<span class="nx">r</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">help</span><span class="p">();</span>
+</pre></div>
+
+<h1>How Events are stored</h1>
+
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nx">_id</span><span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(),</span> <span class="c1">// for internal use only</span>
+  <span class="nx">event</span><span class="o">:</span> <span class="s1">'event name'</span><span class="p">,</span> <span class="c1">// string that represents what type of event this is</span>
+  <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON</span> <span class="nx">Data</span><span class="p">,</span> <span class="c1">// Contains the actual message contents</span>
+  <span class="nx">handled</span><span class="o">:</span> <span class="kr">boolean</span><span class="p">,</span> <span class="c1">// states if the message has been handled or not</span>
+  <span class="nx">emitted</span><span class="o">:</span> <span class="nb">Date</span><span class="p">(),</span> <span class="c1">// Contains the date/time when the event was emitted</span>
+  <span class="nx">partial</span><span class="o">:</span> <span class="kr">boolean</span><span class="p">,</span> <span class="c1">// for responses states if this is a partial response or the complete/end response</span>
+  <span class="nx">host</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="c1">// Contains the host name of the machine that initiated the event</span>
+  <span class="nx">conversationId</span><span class="o">:</span> <span class="nx">string</span> <span class="c1">// if the event expects response(s) this will be the conversation identifier used to track those responses</span>
+<span class="p">}</span>
+</pre></div>
+
+<h1>Update History</h1>
+
+<p>v0.2.4</p>
+
+<ul>
+<li>Modified MongoMQ constructor to allow for no options to be passed</li>
+<li>Added basic and webserver examples</li>
+<li>Move ensureCappedCollection logic to MongoConnection where it belongs</li>
+<li>Surfaced MongoConnection from the main library in case anyone else wants to use it, also used in webserver demo</li>
+</ul><p>v0.2.3</p>
+
+<ul>
+<li>Minor bug fix related to passive listeners where a fromDT was not passed in the options</li>
+<li>Added hostName to messages for better tracking/logging</li>
+<li>Modified passive callback to pass the actual message as the "this" argument, you can now use this.event to get the actual event that was responded to</li>
+<li>Updated the on() method to accept strings or regular expressions to filter events on</li>
+</ul><p>v0.2.2</p>
+
+<ul>
+<li>Completed code to allow for callbacks and partial callbacks to be issued back to emit statements</li>
+<li>Complteed refactoring of code to properly seperate functionality into objects</li>
+</ul><p>v0.2.1</p>
+
+<ul>
+<li>Majorly refactored code</li>
+<li>Added autoIndexId: true to queue collection creation</li>
+<li>Better MongoMQ application with help()</li>
+<li>Updated test application</li>
+<li>Added an exception to emit() when you try to emit before start() has been called</li>
+<li>fix to onAny so it will restart listeners after a close() and start() re-issue</li>
+<li>Added remove*() methods</li>
+<li>Changed close() to stop()</li>
+<li>hereOnOut options - allows listeners to only pay attention to messages posted after they have been started up</li>
+<li>Added ability to register listeners (via on and onAny) when queue is not started</li>
+</ul><p>v0.1.1</p>
+
+<ul>
+<li>Bug fixes to on event</li>
+<li>Added in new onAny register</li>
+<li>Migrated code to retain cursor</li>
+</ul><p>v0.1.0</p>
+
+<ul>
+<li>Initial release</li>
+<li>More of a proof of concept</li>
+</ul>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/jdarling" class="avatar"><img src="https://secure.gravatar.com/avatar/7adda9402e106e9dd12776e202de275b?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" width="48" height="48"/></a> <a href="https://github.com/jdarling">jdarling</a> maintains <a href="https://github.com/jdarling/MongoMQ">MongoMQ</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/jdarling/MongoMQ/tarball/master" class="tar">tar</a><a href="https://github.com/jdarling/MongoMQ/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
