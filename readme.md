@@ -1,11 +1,7 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
-Version 0.2.4 introduces two new demo applications (basic and webserver) to showcase how to utilize MongoMQ.  It made a minor change to the MongoMQ Constructor allowing for no options to be passed when working with a local MongoDB instance and not needing to specify a Database or Collection to utilize.
-
-The webserver example was built using [WebMatrix 2.0](http://www.microsoft.com/web/webmatrix/) and is an example of a complete useable sample of how an application stack could be developed with MongoMQ.  The idea is to have a webserver where the processing can take place anywhere else on the network or any place where the MongoDB is available.  At the same time it could be ran in a load balanced solution where multiple copies of the stack are balanced and still share work.  It uses MongoDB as the data store since it must already be available to use MongoMQ.
-
-The code used for the webserver demo was modified from [Steven Sandersons video tutorials](https://github.com/SteveSanderson/nodejs-webmatrix-video-tutorials)
+Version 0.2.5 general code cleanup and some optimizations
 
 Installation
 ============
@@ -262,11 +258,12 @@ How Events are stored
 Update History
 ==============
 
+v0.2.5
+  * General code cleanup and optimizations
+  * Examples cleanup and fixes
+
 v0.2.4
-  * Modified MongoMQ constructor to allow for no options to be passed
-  * Added basic and webserver examples
-  * Move ensureCappedCollection logic to MongoConnection where it belongs
-  * Surfaced MongoConnection from the main library in case anyone else wants to use it, also used in webserver demo
+  * Examples added
 
 v0.2.3
   * Minor bug fix related to passive listeners where a fromDT was not passed in the options

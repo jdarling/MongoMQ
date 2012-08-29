@@ -21,17 +21,11 @@ util.inherits(DAO, MongoMQ);
 DAO.prototype.doLoad = function(err, data, next){
   var self = this;
   console.log('load: ', data);
-  self.store.find('items', {$or: [{_id: ObjectId(data)}, {name: data}]}, function(err, cursor){
-    if(err){
-      next({error: err}, true);
-    }else{
-      cursor.nextObject(function(err, record){
-        if(record&&record.id&&!record.id){
-          record.id = _id;
-        }
-        next(err||record, true);
-      });
-    }
+  self.store.collection('items', function(err, collection){
+    collection.findOne({$or: [{_id: ObjectId(data)}, {name: data}]}, function(err, record){
+      console.log(arguments);
+      next(err||record, true);
+    });
   });
 };
 
