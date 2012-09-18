@@ -1,6 +1,7 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
+Version 0.2.7 fixed a cursor leak when using passive callbacks.
 Version 0.2.6 bug fix related to relplica set configuration loading from config.json files.
 Version 0.2.5 general code cleanup and some optimizations.
 
@@ -259,8 +260,11 @@ How Events are stored
 Update History
 ==============
 
+v0.2.7
+  * Fixed a cursor leak when using passive callbacks
+
 v0.2.6
-  * bug fix related to relplica set configuration loading from config.json files
+  * Bug fix related to relplica set configuration loading from config.json files
 
 v0.2.5
   * General code cleanup and optimizations
