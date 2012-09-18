@@ -1,7 +1,8 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
-Version 0.2.5 general code cleanup and some optimizations
+Version 0.2.6 bug fix related to relplica set configuration loading from config.json files.
+Version 0.2.5 general code cleanup and some optimizations.
 
 Installation
 ============
@@ -257,6 +258,9 @@ How Events are stored
 
 Update History
 ==============
+
+v0.2.6
+  * bug fix related to relplica set configuration loading from config.json files
 
 v0.2.5
   * General code cleanup and optimizations
