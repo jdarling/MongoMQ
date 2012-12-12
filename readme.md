@@ -1,9 +1,16 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
-Version 0.2.7 fixed a cursor leak when using passive callbacks.
-Version 0.2.6 bug fix related to relplica set configuration loading from config.json files.
-Version 0.2.5 general code cleanup and some optimizations.
+>Version 0.2.9 fixes settings so that two consumers can't pickup a message at the same time.
+>
+>Version 0.2.8 upgraded code for new MongoDB Native Drivers.
+>
+>Version 0.2.7 fixed a cursor leak when using passive callbacks.
+>
+>Version 0.2.6 bug fix related to relplica set configuration loading from config.json files.
+>
+>Version 0.2.5 general code cleanup and some optimizations.
+>
 
 Installation
 ============
@@ -11,7 +18,8 @@ Installation
 From GitHub
 -----------
   * Download from GitHub and extract.
-  * npm install mongodb
+  * change to extracted directory
+  * execute "npm install"
 
 Using NPM
 ---------
@@ -42,10 +50,10 @@ options
   * mqDB             - Database to store queue in, defaults to 'MongoMQ'
   * username         - Optional value of the username to validate against Mongo with
   * password         - Optional value of the password to validate against Mongo with
-  * host           - If not running against a ReplicaSet this is the server to connect to
+  * host             - If not running against a ReplicaSet this is the server to connect to
   * port             - If not running against a ReplicaSet this is the server port to connect with
   * servers[]        - If connecting to a ReplicaSet then this is a collection of {host: 'hostname', port: 1234} objects defining the root entry for the ReplicaSet
-  * collectionSize   - The size in bytes to cap the collection at, defaults to 100000000
+  * collectionSize   - The size in bytes to cap the collection at, defaults to 104857600
   * serverOptions    - An optional options object that will be passed to Mongo-Native when the Mongo connection is created
   * nativeParser     - Boolean (defaults false) to enable usage of Mongo-Native's native parser.  Only use this if you install mongodb with native support
   * autoStart        - Boolean (defaults true) if the MongoMQ instance should start itself up when created, if set to false you need to call MongoMQ.start()
@@ -259,6 +267,16 @@ How Events are stored
 
 Update History
 ==============
+
+v0.2.9
+  * Change SafeDBDriver default value from false to true, this fixes the issue with multiple listeners picking up the same message since Mongo doesn't perform record locking on updates if this isn't true.
+  * Fix autoStart
+  * Resolves #9 and #10
+  
+v0.2.8
+  * Upgraded code for new MongoDB Native Drivers (thanks mfrobben for starting points)
+  * Readme cleanup (thanks ttezel for pointing this out and fixing it)
+  * Resolves #7 and #6
 
 v0.2.7
   * Fixed a cursor leak when using passive callbacks
