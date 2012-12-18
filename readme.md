@@ -175,7 +175,7 @@ var MongoMQ = require('../lib/MongoMQ').MongoMQ;
 var repl = require('repl');
 
 var queue = new MongoMQ({
-  autoStart: false
+  autoStart: true
 });
 
 var r = repl.start({
@@ -211,7 +211,7 @@ r.context.logAny = function(){
   queue.onAny(logMsg);
 };
 
-r.context.eatTest = function(){
+r.context.listen = function(){
   queue.on('test', eatTest);
 };
 
