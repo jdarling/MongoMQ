@@ -1,7 +1,7 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
->Version 0.2.10 introduces a work around in QueneListener for when the Mongo server goes away.
+>Version 0.2.11 introduces a work around in QueneListener for when the Mongo server goes away.
 >
 >Version 0.2.9 fixes settings so that two consumers can't pickup a message at the same time.
 >
@@ -269,6 +269,9 @@ How Events are stored
 
 Update History
 ==============
+
+v0.2.10&v0.2.11
+  * Workaround for Mongo Native Driver not supporting tailed cursor auto-reconnects when Mongo server goes away.
 
 v0.2.9
   * Change SafeDBDriver default value from false to true, this fixes the issue with multiple listeners picking up the same message since Mongo doesn't perform record locking on updates if this isn't true.
