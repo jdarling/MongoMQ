@@ -1,6 +1,8 @@
 MongoMQ - Node.js MongoMQ
 =========================
 
+>Version 0.2.10 introduces a work around in QueneListener for when the Mongo server goes away.
+>
 >Version 0.2.9 fixes settings so that two consumers can't pickup a message at the same time.
 >
 >Version 0.2.8 upgraded code for new MongoDB Native Drivers.

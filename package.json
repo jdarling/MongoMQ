@@ -4,7 +4,7 @@
     "email": "jeremy.darling@gmail.com"
   },
   "name": "mongomq",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "repository": {
     "type": "git",
     "url": "git://github.com/jdarling/MongoMQ.git"
