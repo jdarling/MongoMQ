@@ -1,21 +1,32 @@
-var readline = require('readline');
-var MongoMQ = require('../../lib/MongoMQ').MongoMQ;
-var emitter = new MongoMQ();
+var MC = require('../../lib/lib').MongoConnection;
+var MQ = require('../../lib/lib').MongoMQ;
 
-var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+var options = {databaseName: 'tests', queueCollection: 'capped_collection', autoStart: false};
+//var options = {servers: ['ndcsrvcdep601', 'ndcsrvcdep602'], databaseName: 'tests', queueCollection: 'capped_collection', autoStart: false};
 
-var helloHandler = function(err, data, next){
-  console.log(err||data); // display any errors or the message
-  next(); // make sure we reset the listener
-  emitter.stop(); // stop the queue listener completely and exit the application
+var mq = module.exports = new MQ(options);
+
+var recordNumber = 0;
+var putRecord = function(){
+  console.log('Emitting: '+recordNumber);
+  mq.emit('test', recordNumber);
+  recordNumber++;
+  setTimeout(putRecord, 5);
 };
 
-emitter.start(function(){
-  rl.question("What is your name? ", function(answer) { // prompt the user for their name
-    emitter.emit('hello', {name: answer}, helloHandler); // send a message to the hello listener
-    rl.close(); // close the readline instance
+(function(){
+  var logger = new MC(options);
+  logger.open(function(err, mc){
+    if(err){
+      console.log('ERROR: ', err);
+    }else{
+      mc.collection('log', function(err, loggingCollection){
+        loggingCollection.remove({},  function(){
+          mq.start(function(err){
+            putRecord();
+          });
+        });
+      });
+    }
   });
-});
+})();

@@ -1,18 +1,16 @@
-MongoMQ - Node.js MongoMQ
-=========================
+MongoMQ v0.3.x
+==============
 
->Version 0.2.11 introduces a work around in QueneListener for when the Mongo server goes away.
->
->Version 0.2.9 fixes settings so that two consumers can't pickup a message at the same time.
->
->Version 0.2.8 upgraded code for new MongoDB Native Drivers.
->
->Version 0.2.7 fixed a cursor leak when using passive callbacks.
->
->Version 0.2.6 bug fix related to relplica set configuration loading from config.json files.
->
->Version 0.2.5 general code cleanup and some optimizations.
->
+Version 0.3.x introduces new functionality and many bug fixes over v0.2.x.  It also introduces some minor changes to packet format and thus is not backwards compatable with v0.2.x
+
+Biggest differences from 0.2.x to 0.3.x
+=======================================
+
+  * Partial callbacks were removed.  They didn't serve any purpose.
+  * Large messages are pushed to GridFS (planned feature)
+  * Message format changed, backward compatible for the most part, must turn on the options.support_v2 flag
+  * OnAny has been temporarily removed, *BREAKING CHANGE*
+  * Logging support (started, but not complete/tested)
 
 Installation
 ============
@@ -30,8 +28,8 @@ Using NPM
 Requirements
 ============
   * Node.js - v0.8.2 or better (really only for the MongoMQ and Test.js scripts REPL support)
-  * MongoDB - v2.0.2 or better (for Tailable Cursors, autoIndexId bug fix, and ReplicaSet fixes)
-  
+  * MongoDB - v2.1.2 or better (for Tailable Cursors, autoIndexId bug fix, and ReplicaSet fixes)
+
 What is MongoMQ?
 ================
 
@@ -47,18 +45,6 @@ Supported Methods
 
 new MongoMQ(options)
 --------------------
-options
-  * mqCollectionName - Collection to store queue messages in, defaults to 'queue'
-  * mqDB             - Database to store queue in, defaults to 'MongoMQ'
-  * username         - Optional value of the username to validate against Mongo with
-  * password         - Optional value of the password to validate against Mongo with
-  * host             - If not running against a ReplicaSet this is the server to connect to
-  * port             - If not running against a ReplicaSet this is the server port to connect with
-  * servers[]        - If connecting to a ReplicaSet then this is a collection of {host: 'hostname', port: 1234} objects defining the root entry for the ReplicaSet
-  * collectionSize   - The size in bytes to cap the collection at, defaults to 104857600
-  * serverOptions    - An optional options object that will be passed to Mongo-Native when the Mongo connection is created
-  * nativeParser     - Boolean (defaults false) to enable usage of Mongo-Native's native parser.  Only use this if you install mongodb with native support
-  * autoStart        - Boolean (defaults true) if the MongoMQ instance should start itself up when created, if set to false you need to call MongoMQ.start()
 
 MongoMQ.start([callback])
 -------------------------
@@ -76,81 +62,55 @@ Stops listening for messages and closes the emitter.
 Params:
 * callback - will be called once the queue is completely close and all registered listeners have been shut down
 
-MongoMQ.emit(msgType, data, [partialCallback], [completeCallback])
+MongoMQ.emit(msgType, data, [completeCallback])
 ------------------------------------------------------------------
 
 Places the a message of msgTye on the queue with the provided data for handlers to consume.
 
 Params:
-* msgType - The message type to emit.
-* data - a JSON serializeable collection of data to be sent.
-* partialCallback - Will be called for large or long running result sets to return partial data back.  Optional and if not present then completeCallback will be called with buffered results once all operations have completed.
-* completeCallback - Will be called once all remote processing has been completed.  If partialCallback is not provided and completeCallback is provided a temporary buffer will be setup and the final result set will be sent to completeCallback.
 
-MongoMQ.on(msgType, [passive||options], handler)
+  * msgType - The message type to emit.
+  * data - a JSON serializeable collection of data to be sent.
+  * completeCallback - Will be called once all remote processing has been completed.
+
+MongoMQ.on(msgType, [options], handler)
 ---------------------------------------
 
 Sets up a listener for a specific message type.
 
 Params:
+
 * msgType - The message type to listen for can be a string or a regular expression
-* passive - If true will not mark the message as handled when a message is consumed from the queue
 * options - additional options that can be passed
 * handler(err, messageContents, next) - Use next() to look for another message in the queue, don't call next() if you only want a one time listener
     * If you want to send back data or partial data use next(data, complete) where complete should be true if you have sent all of your responses, see test.js r.context.tmp for a simple example.
 
 options -
-  * passive - If true will not mark the message as handled when a message is consumed from the queue
-  * hereOnOut - Boolean (defaults false) will only recieve messages from the time the listener was registered instead of all unconsumed messages if set to true
 
-
-MongoMQ.onAny(handler)
-----------------------
-
-Sets up a passive listener for all messages that are placed on the queue.
-
-Params:
-* callback(err, messageContents, next) - Use next() to look for another message in the queue, don't call next() if you only want a one time listener
-
-MongoMQ.indexOfListener([event], [handler])
--------------------------------------------
-
-Provides back the index of the first listener that matches the supplied event and/or handler.  One or both of event and handler must be supplied.  Returns BOOLEAN false if no handler is found.
-
-Params:
-* event - The name of the event to look for.
-* handler - The specific handler function to look for.
-
-MongoMQ.getListenerFor([event], [handler])
+MongoMQ.listeners(event)
 ------------------------------------------
 
-Provides back the first listener that matches the supplied event and/or handler.  One or both of event and handler must be supplied.  Returns BOOLEAN false if no handler is found.
+Provides back an array of listeners that matche the supplied event.  Returns an empty array if no listeners are subscribed to the event.
 
 Params:
 * event - The name of the event to look for.
-* handler - The specific handler function to look for.
 
-MongoMQ.removeListener([event], [handler])
+MongoMQ.removeListener(event, handler)
 ------------------------------------------
 
-Shuts down the first listener that matches the supplied event and/or handler and removes it from the listeners list.
+Shuts down the first listener that matches the supplied event and handler and removes it from the listeners list.
 
 Params:
 * event - The name of the event to look for.
 * handler - The specific handler function to look for.
 
-MongoMQ.removeListeners(event)
+MongoMQ.removeAllListeners(event)
 ------------------------------
 
-Shuts down ALL listeners for the specified event and removes it from the listeners list.
+Shuts down ALL listeners for the specified event and removes them from the listeners list.
 
 Params:
 * event - The name of the event to look for.
-
-MongoMQ.removeAllListeners()
-----------------------------
-
-Shuts down ALL listeners and clears the listeners list.
 
 How does MongoMQ work?
 ======================
@@ -257,18 +217,29 @@ How Events are stored
 ```javascript
 {
   _id: ObjectId(), // for internal use only
-  event: 'event name', // string that represents what type of event this is
-  data: JSON Data, // Contains the actual message contents
-  handled: boolean, // states if the message has been handled or not
-  emitted: Date(), // Contains the date/time when the event was emitted
-  partial: boolean, // for responses states if this is a partial response or the complete/end response
+  pkt_ver: 3, // Packet version that this message is being sent in
+  event: event, // string that represents what type of event this is
+  data: message, // Contains the actual message contents
+  handled: false, // states if the message has been handled or not
+  localTime: dt, // Local Date Time of when the message was put on the queue
+  globalTime: new Date(dt-self.serverTimeOffset), // Date Time offset to server time of when the message was put on the queue
+  pickedTime: new Date(dt-self.serverTimeOffset), // Date Time offset to server time of when the message was picked up from the queue
   host: string, // Contains the host name of the machine that initiated the event
-  conversationId: string // if the event expects response(s) this will be the conversation identifier used to track those responses
+  [response_id: string] // optional if the event expects response(s) this will be the conversation identifier used to track those responses
 }
 ```
 
 Update History
 ==============
+
+v0.3 Update History
+-------------------
+
+v0.3.0
+  * Initial release of v0.3.x, includes many new features and functionality along with many bug fixes.
+
+v0.2 Update History
+-------------------
 
 v0.2.10&v0.2.11
   * Workaround for Mongo Native Driver not supporting tailed cursor auto-reconnects when Mongo server goes away.

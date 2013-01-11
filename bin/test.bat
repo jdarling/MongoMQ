@@ -1,0 +1,1 @@
+node MongoMQ.js --db=tests --collection=capped_collection --autoStart
