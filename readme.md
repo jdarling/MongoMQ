@@ -235,6 +235,11 @@ Update History
 v0.3 Update History
 -------------------
 
+v0.3.1
+  * Added setTimeout to nextTick on startup to give Mongo a chance to get connceted to
+  * Minor bug fix due to EventEmitter treating 'error' events specially
+  * Tweak to once listeners to call next if it exists.  Shouldn't change anything but it is good practice.
+
 v0.3.0
   * Initial release of v0.3.x, includes many new features and functionality along with many bug fixes.
 
