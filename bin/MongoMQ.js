@@ -1,7 +1,7 @@
 var MongoMQ = require('../lib/MongoMQ');
 var repl = require('repl');
 
-var l = process.argv.length, tmp, names, reCmdLineStrip=/^(\-|\\|\/)*/i, opts = {},
+var l = process.argv.length, tmp, names, reCmdLineStrip=/^(\-|\\|\/)*/i, opts = {autoStart: false},
   alias = {
     db: 'databaseName',
     collection: 'queueCollection',
