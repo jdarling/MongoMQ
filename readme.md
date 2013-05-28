@@ -235,6 +235,11 @@ Update History
 v0.3 Update History
 -------------------
 
+v0.3.2
+  * Upgraded to latest (1.3.6) version of Mongo Node Native
+  * Fixed typo in lib.js for inclusion of Logging (changed Logging to logging)
+  * Locked dependency versions so breaking shouldn't happen again when the dependency chain changes
+
 v0.3.1
   * Added setTimeout to nextTick on startup to give Mongo a chance to get connceted to
   * Minor bug fix due to EventEmitter treating 'error' events specially
