@@ -235,6 +235,12 @@ Update History
 v0.3 Update History
 -------------------
 
+v0.3.4
+  * Fix QueueMonitor.js call from options to self.options in handleResponse
+
+v0.3.3
+  * Fixed package.json and upreved version to pickup changes.
+
 v0.3.2
   * Upgraded to latest (1.3.6) version of Mongo Node Native
   * Fixed typo in lib.js for inclusion of Logging (changed Logging to logging)
