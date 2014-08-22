@@ -9,7 +9,6 @@ var options = {host: 'localhost', databaseName: 'tests', queueCollection: 'cappe
       }
     }
 };
-//var options = {servers: ['ndcsrvcdep601', 'ndcsrvcdep602'], databaseName: 'tests', queueCollection: 'capped_collection', autoStart: true};
 
 var mq = module.exports = new MQ(options);
 

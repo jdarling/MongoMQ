@@ -1,7 +1,3 @@
-//require('v8-profiler');
-var agent = require('webkit-devtools-agent');
-agent.start();
-
 var MC = require('../../lib/lib').MongoConnection;
 var MQ = require('../../lib/lib').MongoMQ;
 
