@@ -23,7 +23,7 @@ Children.prototype.startChild = function(fileName){
   })(child));
   child.on('uncaughtException', (function(aChild){
     return function(err){
-      console.log('EXCEPTION: ', err);
+      console.error('EXCEPTION: ', err);
     };
   })(child));
   child.stdout.on('data', (function(aChild){
@@ -33,7 +33,7 @@ Children.prototype.startChild = function(fileName){
   })(child));
   child.stderr.on('data', (function(aChild){
     return function(data){
-      console.log('ERROR: ', data.toString());
+      console.error('ERROR: ', data.toString());
     };
   })(child));
   _children.push(child);

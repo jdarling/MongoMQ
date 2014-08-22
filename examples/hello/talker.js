@@ -1,8 +1,11 @@
+//require('v8-profiler');
+var agent = require('webkit-devtools-agent');
+agent.start();
+
 var MC = require('../../lib/lib').MongoConnection;
 var MQ = require('../../lib/lib').MongoMQ;
 
 var options = {host: 'localhost', databaseName: 'tests', queueCollection: 'capped_collection', autoStart: true};
-//var options = {servers: ['ndcsrvcdep601', 'ndcsrvcdep602'], databaseName: 'tests', queueCollection: 'capped_collection', autoStart: true};
 
 var mq = module.exports = new MQ(options);
 
