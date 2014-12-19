@@ -22,7 +22,7 @@
     "node": ">= v0.8.2"
   },
   "dependencies": {
-    "mongodb": "1.4.x",
-    "node-uuid": "1.4.x"
+    "mongodb": "^1.4.25",
+    "node-uuid": "^1.4.2"
   }
 }
