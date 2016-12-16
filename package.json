@@ -10,19 +10,23 @@
     "url": "git://github.com/jdarling/MongoMQ.git"
   },
   "main": "./lib/lib",
+  "license": "MIT",
   "contributors": [
     {
       "name": "mfrobben"
     },
     {
       "name": "joscha"
+    },
+    {
+      "name": "nickpalmer"
     }
   ],
   "engines": {
     "node": ">= v0.8.2"
   },
   "dependencies": {
-    "mongodb": "^2.2.11",
-    "node-uuid": "^1.4.2"
+    "mongodb": "^2.2.16",
+    "node-uuid": "^1.4.7"
   }
 }
